@@ -16,20 +16,18 @@
       <div class="createPost-main-container">
         <el-row>
           <Warning />
-
           <el-col :span="24">
             <el-form-item style="margin-bottom: 40px;" prop="title">
               <MDinput v-model="postForm.title" :maxlength="100" name="name" required>
-                Title
+                标题
               </MDinput>
             </el-form-item>
-
             <div class="postInfo-container">
               <el-row>
                 <el-col :span="8">
-                  <el-form-item label-width="60px" label="Author:" class="postInfo-container-item">
-                    <el-select v-model="postForm.author" :remote-method="getRemoteUserList" filterable default-first-option remote placeholder="Search user">
-                      <el-option v-for="(item,index) in userListOptions" :key="item+index" :label="item" :value="item" />
+                  <el-form-item label-width="60px" label="分类:" class="postInfo-container-item">
+                    <el-select v-model="postForm.classify" :remote-method="getClassifyList" filterable default-first-option remote placeholder="Search classify">
+                      <el-option v-for="(item,index) in classifyListOptions" :key="item+index" :label="item" :value="item" />
                     </el-select>
                   </el-form-item>
                 </el-col>
@@ -57,8 +55,12 @@
           </el-col>
         </el-row>
 
-        <el-form-item style="margin-bottom: 40px;" label-width="70px" label="Summary:">
-          <el-input v-model="postForm.content_short" :rows="1" type="textarea" class="article-textarea" autosize placeholder="Please enter the content" />
+        <el-form-item style="margin-bottom: 40px;" label-width="70px" label="作者:">
+          <el-input v-model="postForm.author" :rows="1" type="textarea" class="article-textarea" autosize placeholder="作者" />
+        </el-form-item>
+
+        <el-form-item style="margin-bottom: 40px;" label-width="70px" label="总结:">
+          <el-input v-model="postForm.content_short" :rows="1" type="textarea" class="article-textarea" autosize placeholder="总结" />
           <span v-show="contentShortLength" class="word-counter">{{ contentShortLength }}words</span>
         </el-form-item>
 
@@ -79,9 +81,9 @@ import Tinymce from '@/components/Tinymce'
 import Upload from '@/components/Upload/SingleImage3'
 import MDinput from '@/components/MDinput'
 import Sticky from '@/components/Sticky' // 粘性header组件
-import { validURL } from '@/utils/validate'
-import { fetchArticle } from '@/api/article'
-import { searchUser } from '@/api/remote-search'
+// import { validURL } from '@/utils/validate'
+import { fetchArticle, createArticle } from '@/api/article'
+import { searchUser, searchClassify } from '@/api/remote-search'
 import Warning from './Warning'
 import { CommentDropdown, PlatformDropdown, SourceUrlDropdown } from './Dropdown'
 
@@ -93,6 +95,7 @@ const defaultForm = {
   source_uri: '', // 文章外链
   image_uri: '', // 文章图片
   display_time: undefined, // 前台展示时间
+  classify: '', // 分类
   id: undefined,
   platforms: ['a-platform'],
   comment_disabled: false,
@@ -120,30 +123,31 @@ export default {
         callback()
       }
     }
-    const validateSourceUri = (rule, value, callback) => {
-      if (value) {
-        if (validURL(value)) {
-          callback()
-        } else {
-          this.$message({
-            message: '外链url填写不正确',
-            type: 'error'
-          })
-          callback(new Error('外链url填写不正确'))
-        }
-      } else {
-        callback()
-      }
-    }
+    // const validateSourceUri = (rule, value, callback) => {
+    //   if (value) {
+    //     if (validURL(value)) {
+    //       callback()
+    //     } else {
+    //       this.$message({
+    //         message: '外链url填写不正确',
+    //         type: 'error'
+    //       })
+    //       callback(new Error('外链url填写不正确'))
+    //     }
+    //   } else {
+    //     callback()
+    //   }
+    // }
     return {
       postForm: Object.assign({}, defaultForm),
       loading: false,
       userListOptions: [],
+      classifyListOptions: ['java', 'redis'],
       rules: {
-        image_uri: [{ validator: validateRequire }],
+        // image_uri: [{ validator: validateRequire }],
         title: [{ validator: validateRequire }],
-        content: [{ validator: validateRequire }],
-        source_uri: [{ validator: validateSourceUri, trigger: 'blur' }]
+        content: [{ validator: validateRequire }]
+        // source_uri: [{ validator: validateSourceUri, trigger: 'blur' }]
       },
       tempRoute: {}
     }
@@ -233,12 +237,28 @@ export default {
         })
         return
       }
-      this.$message({
-        message: '保存成功',
-        type: 'success',
-        showClose: true,
-        duration: 1000
+      console.log(this.postForm)
+      this.$refs['postForm'].validate((valid) => {
+        if (valid) {
+          this.postForm.id = parseInt(Math.random() * 100) + 1024 // mock a id
+          this.postForm.author = 'vue-element-admin'
+          createArticle(this.postForm).then(() => {
+            this.dialogFormVisible = false
+            this.$notify({
+              title: '成功',
+              message: '创建成功',
+              type: 'success',
+              duration: 2000
+            })
+          })
+        }
       })
+      // this.$message({
+      //   message: '保存成功',
+      //   type: 'success',
+      //   showClose: true,
+      //   duration: 1000
+      // })
       this.postForm.status = 'draft'
     },
     getRemoteUserList(query) {
@@ -246,6 +266,15 @@ export default {
         if (!response.data.items) return
         this.userListOptions = response.data.items.map(v => v.name)
       })
+    },
+    getClassifyList(query) {
+      searchClassify(query).then(response => {
+        if (!response.data.items) return
+        this.classifyListOptions = response.data.items.map(v => v.name)
+      })
+    },
+    createData() {
+
     }
   }
 }
