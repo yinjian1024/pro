@@ -32,9 +32,9 @@ export function createArticle(data) {
   })
 }
 
-export function updateArticle(data) {
+export function publishArticle(data) {
   return request({
-    url: '/vue-element-admin/article/update',
+    url: '/vue-element-admin/article/publish',
     method: 'post',
     data
   })
