@@ -176,8 +176,9 @@ export default {
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id
       this.fetchData(id)
+    } else {
+      this.postForm.id = Date.parse(new Date()) // mock a id
     }
-
     // Why need to make a copy of this.$route here?
     // Because if you enter this page and quickly switch tag, may be in the execution of the setTagsViewTitle function, this.$route is no longer pointing to the current page
     // https://github.com/PanJiaChen/vue-element-admin/issues/1221
@@ -189,8 +190,8 @@ export default {
         this.postForm = response.data
 
         // just for test
-        this.postForm.title += `   Article Id:${this.postForm.id}`
-        this.postForm.content_short += `   Article Id:${this.postForm.id}`
+        // this.postForm.title += `   Article Id:${this.postForm.id}`
+        // this.postForm.content_short += `   Article Id:${this.postForm.id}`
 
         // set tagsview title
         this.setTagsViewTitle()
@@ -240,7 +241,6 @@ export default {
       console.log(this.postForm)
       this.$refs['postForm'].validate((valid) => {
         if (valid) {
-          this.postForm.id = parseInt(Math.random() * 100) + 1024 // mock a id
           this.postForm.author = 'vue-element-admin'
           createArticle(this.postForm).then(() => {
             this.dialogFormVisible = false

@@ -52,13 +52,18 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+    <pagination v-show="total>0" :total="total" :page.sync="queryForm.page" :limit.sync="queryForm.limit" @pagination="getList" />
   </div>
 </template>
 
 <script>
 import { fetchList } from '@/api/article'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+
+const defaultForm = {
+  page: 1,
+  limit: 20
+}
 
 export default {
   name: 'ArticleList',
@@ -75,13 +80,10 @@ export default {
   },
   data() {
     return {
+      queryForm: Object.assign({}, defaultForm),
       list: null,
       total: 0,
-      listLoading: true,
-      listQuery: {
-        page: 1,
-        limit: 20
-      }
+      listLoading: true
     }
   },
   created() {
@@ -90,7 +92,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
+      fetchList(this.queryForm).then(response => {
         this.list = response.data.items
         this.total = response.data.total
         this.listLoading = false
