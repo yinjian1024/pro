@@ -26,8 +26,8 @@
               <el-row>
                 <el-col :span="8">
                   <el-form-item label-width="60px" label="分类:" class="postInfo-container-item">
-                    <el-select v-model="postForm.classify" :remote-method="getClassifyList" filterable default-first-option remote placeholder="Search classify">
-                      <el-option v-for="(item,index) in classifyListOptions" :key="item+index" :label="item" :value="item" />
+                    <el-select v-model="postForm.classify" value-key="id" :remote-method="getClassifyList" filterable default-first-option remote placeholder="Search classify">
+                      <el-option v-for="item in classifyListOptions" :key="item.id" :label="item.label" :value="item.id" />
                     </el-select>
                   </el-form-item>
                 </el-col>
@@ -142,7 +142,10 @@ export default {
       postForm: Object.assign({}, defaultForm),
       loading: false,
       userListOptions: [],
-      classifyListOptions: ['java', 'redis'],
+      classifyListOptions: [
+        { id: '1', label: 'java', name: '11' },
+        { id: '2', label: 'redis', name: '22' }
+      ],
       rules: {
         // image_uri: [{ validator: validateRequire }],
         title: [{ validator: validateRequire }],
