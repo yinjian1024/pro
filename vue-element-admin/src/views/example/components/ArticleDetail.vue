@@ -1,19 +1,5 @@
 <template>
   <div class="createPost-container">
-    <el-form :model="ftpForm" label-width="220px">
-      <el-form-item label="请输入文件名" required>
-        <el-input v-model="ftpForm.fileName" auto-complete="off" class="el-col-width" required />
-      </el-form-item>
-      <el-form-item>
-        <el-button size="small" type="primary" @click="handleDownLoad">下载</el-button>
-      </el-form-item>
-      <el-form-item>
-        <el-upload class="upload-demo" :action="uploadUrl" :before-upload="handleBeforeUpload" :on-error="handleUploadError" :before-remove="beforeRemove" multiple :limit="5" :on-exceed="handleExceed" :file-list="fileList">
-          <el-button size="small" type="primary">点击上传</el-button>
-          <div slot="tip" class="el-upload__tip">不超过5Mb</div>
-        </el-upload>
-      </el-form-item>
-    </el-form>
     <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
       <sticky :z-index="10" :class-name="'sub-navbar '+postForm.status">
         <CommentDropdown v-model="postForm.comment_disabled" />
@@ -87,6 +73,20 @@
         </el-form-item>
       </div>
     </el-form>
+    <el-form :model="ftpForm" label-width="220px">
+      <el-form-item label="请输入文件名" required>
+        <el-input v-model="ftpForm.fileName" auto-complete="off" class="el-col-width" required />
+      </el-form-item>
+      <el-form-item>
+        <el-button size="small" type="primary" @click="handleDownLoad">下载</el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-upload class="upload-demo" :action="uploadUrl" :before-upload="handleBeforeUpload" :on-error="handleUploadError" :before-remove="beforeRemove" multiple :limit="5" :on-exceed="handleExceed" :file-list="fileList">
+          <el-button size="small" type="primary">点击上传</el-button>
+          <div slot="tip" class="el-upload__tip">不超过5Mb</div>
+        </el-upload>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
@@ -158,7 +158,7 @@ export default {
     // }
     return {
       ftpForm: Object.assign({}, ftp),
-      uploadUrl: 'http://192.168.0.15:8080/file/upload',
+      uploadUrl: process.env.VUE_APP_BASE_API + '/file/upload',
       fileList: [],
       postForm: Object.assign({}, defaultForm),
       loading: false,
@@ -305,7 +305,7 @@ export default {
     },
     // ftp 上传下载->开始
     handleDownLoad() {
-      window.location.href = `http://192.168.0.15:8080/file/download?fileName=` + this.ftpForm.fileName
+      window.location.href = process.env.VUE_APP_BASE_API + '/file/download?fileName=' + this.ftpForm.fileName
     },
     handleExceed(files, fileList) {
       this.$message.warning(`当前限制选择 5 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
@@ -323,7 +323,7 @@ export default {
     },
     // 测试上传文件(注意web的上下文)
     handleBeforeUpload(file) {
-      this.uploadUrl = 'http://192.168.0.15:8080/file/upload'
+      this.uploadUrl = process.env.VUE_APP_BASE_API + '/file/upload'
     }
     // ftp 上传下载<-结束
   }
