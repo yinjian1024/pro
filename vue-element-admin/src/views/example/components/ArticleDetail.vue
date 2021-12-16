@@ -164,8 +164,10 @@ export default {
       loading: false,
       userListOptions: [],
       classifyListOptions: [
-        { id: '1', label: 'java', name: '11' },
-        { id: '2', label: 'redis', name: '22' }
+        { id: '1', label: 'java' },
+        { id: '2', label: 'maven' },
+        { id: '3', label: 'redis' },
+        { id: '4', label: 'network' }
       ],
       rules: {
         // image_uri: [{ validator: validateRequire }],
