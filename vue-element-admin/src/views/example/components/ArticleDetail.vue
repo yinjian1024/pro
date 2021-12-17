@@ -167,7 +167,8 @@ export default {
         { id: '1', label: 'java' },
         { id: '2', label: 'maven' },
         { id: '3', label: 'redis' },
-        { id: '4', label: 'network' }
+        { id: '4', label: 'network' },
+        { id: '5', label: 'ftp' }
       ],
       rules: {
         // image_uri: [{ validator: validateRequire }],
