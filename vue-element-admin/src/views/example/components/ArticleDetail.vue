@@ -5,6 +5,9 @@
         <CommentDropdown v-model="postForm.comment_disabled" />
         <PlatformDropdown v-model="postForm.platforms" />
         <SourceUrlDropdown v-model="postForm.source_uri" />
+        <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="preview">
+          生成html预览
+        </el-button>
         <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">
           Publish
         </el-button>
@@ -168,7 +171,8 @@ export default {
         { id: '2', label: 'maven' },
         { id: '3', label: 'redis' },
         { id: '4', label: 'network' },
-        { id: '5', label: 'ftp' }
+        { id: '5', label: 'ftp' },
+        { id: '6', label: 'js' }
       ],
       rules: {
         // image_uri: [{ validator: validateRequire }],
@@ -305,6 +309,10 @@ export default {
     },
     createData() {
 
+    },
+    preview() {
+      // window.open('https://suiyinji.com/example.html?content=' + this.postForm.content)
+      window.open('https://suiyinji.com/example.html?content=' + escape(this.postForm.content))
     },
     // ftp 上传下载->开始
     handleDownLoad() {
