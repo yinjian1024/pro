@@ -218,6 +218,13 @@ export const asyncRoutes = [
         component: () => import('@/views/example/list'),
         name: 'ArticleList',
         meta: { title: 'articleList', icon: 'list' }
+      },
+      {
+        path: 'preview',
+        component: () => import('@/views/example/preview'),
+        name: 'PreviewArticle',
+        meta: { title: 'previewArticle', icon: 'preview' },
+        hidden: true
       }
     ]
   },

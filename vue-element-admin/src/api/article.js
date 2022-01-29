@@ -32,6 +32,14 @@ export function createArticle(data) {
   })
 }
 
+export function updateArticle(data) {
+  return request({
+    url: '/vue-element-admin/article/create',
+    method: 'post',
+    data
+  })
+}
+
 export function publishArticle(data) {
   return request({
     url: '/vue-element-admin/article/publish',

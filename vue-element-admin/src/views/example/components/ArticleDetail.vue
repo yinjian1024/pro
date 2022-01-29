@@ -172,7 +172,9 @@ export default {
         { id: '3', label: 'redis' },
         { id: '4', label: 'network' },
         { id: '5', label: 'ftp' },
-        { id: '6', label: 'js' }
+        { id: '6', label: 'js' },
+        { id: '7', label: 'oracle' },
+        { id: '8', label: 'mysql' }
       ],
       rules: {
         // image_uri: [{ validator: validateRequire }],
@@ -204,6 +206,8 @@ export default {
     }
   },
   created() {
+    // 绑定事件
+    window.addEventListener('keydown', this.keyDown)
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id
       this.fetchData(id)
@@ -216,7 +220,17 @@ export default {
     // https://github.com/PanJiaChen/vue-element-admin/issues/1221
     this.tempRoute = Object.assign({}, this.$route)
   },
+  // 成功后销毁事件
+  destroyed() {
+    window.removeEventListener('keydown', this.keyDown, false)
+  },
   methods: {
+    keyDown(e) {
+      // 如果是回车则执行登录方法  /*&& e.keyCode === 83*/
+      if (e.ctrlKey && e.keyCode === 83) {
+        this.draftForm()
+      }
+    },
     fetchData(id) {
       fetchArticle(id).then(response => {
         this.postForm = response.data
