@@ -174,7 +174,9 @@ export default {
         { id: '5', label: 'ftp' },
         { id: '6', label: 'js' },
         { id: '7', label: 'oracle' },
-        { id: '8', label: 'mysql' }
+        { id: '8', label: 'mysql' },
+        { id: '9', label: 'centos8' },
+        { id: '10', label: 'nginx' }
       ],
       rules: {
         // image_uri: [{ validator: validateRequire }],
